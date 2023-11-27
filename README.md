@@ -17,5 +17,5 @@ My solutions for AoC 2023 written in Python.
 | 09 | [](https://adventofcode.com/2023/day/9) | [](src/solutions/day09.py) || 22 | [](https://adventofcode.com/2023/day/22) | [](src/solutions/day22.py) |
 | 10 | [](https://adventofcode.com/2023/day/10) | [](src/solutions/day10.py) || 23 | [](https://adventofcode.com/2023/day/23) | [](src/solutions/day23.py) |
 | 11 | [](https://adventofcode.com/2023/day/11) | [](src/solutions/day11.py) || 24 | [](https://adventofcode.com/2023/day/24) | [](src/solutions/day24.py) |
-| 12 | [](https://adventofcode.com/2023/day/12) | ](src/solutions/day12.py) || 25 | [](https://adventofcode.com/2023/day/25) | [](src/solutions/day25.py) |
+| 12 | [](https://adventofcode.com/2023/day/12) | [](src/solutions/day12.py) || 25 | [](https://adventofcode.com/2023/day/25) | [](src/solutions/day25.py) |
 | 13 | [](https://adventofcode.com/2023/day/13) | [](src/solutions/day13.py) |
