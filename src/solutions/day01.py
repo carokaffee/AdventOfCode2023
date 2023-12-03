@@ -27,7 +27,7 @@ def find_calibration_value(str, calibration):
     if calibration:
         str = convert_words_to_numbers(str)
     for el in str:
-        if el in "0123456789":
+        if el.isdigit():
             numbers += el
     return int(numbers[0] + numbers[-1])
 
