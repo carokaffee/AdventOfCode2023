@@ -68,9 +68,9 @@ def find_max_val_for_J(hand):
     num_J = cards.count(11)
     if num_J == 0:
         return cards + [0, 0, 0, 0, 0], bid
-    elif num_J == 1:
-        cards = list([i if i != 11 else 1 for i in cards])
-        return cards + [0, 0, 0, 0, 0], bid
+    # elif num_J == 1:
+    #    cards = list([i if i != 11 else 1 for i in cards])
+    #    return cards + [0, 0, 0, 0, 0], bid
     else:
         possible_J = list(
             itertools.combinations([i for i in range(2, 15) if i != 11], num_J)
