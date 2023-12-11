@@ -14,6 +14,28 @@ def parse_input(data):
     return seeds, conversions
 
 
+def apply_maps(seeds, conversions):
+    transformed = []
+    for seed in seeds:
+        current_seed = seed
+        for conversion in conversions:
+            found = False
+            for source_begin, source_end in conversion.keys():
+                if (
+                    current_seed >= source_begin
+                    and current_seed <= source_end
+                    and found == False
+                ):
+                    found = True
+                    current_seed = (
+                        conversion[(source_begin, source_end)][0]
+                        + current_seed
+                        - source_begin
+                    )
+        transformed.append(current_seed)
+    return transformed
+
+
 def convert_intervals(seed_start, seed_end, conv_start, conv_end, dest_start):
     if seed_end <= conv_start or conv_end <= seed_start:
         return [(seed_start, seed_end)], None
@@ -39,55 +61,41 @@ def convert_intervals(seed_start, seed_end, conv_start, conv_end, dest_start):
         )
 
 
-if __name__ == "__main__":
-    data = load_data(TESTING, "\n\n")
-    seeds, conversions = parse_input(data)
-    print(conversions)
-
+def apply_maps_to_more_seeds(seeds, conversions):
     seed_ranges = []
-    for i, seed in enumerate(seeds):
+    for i in range(len(seeds)):
         if i % 2 == 0:
             seed_ranges.append((seeds[i], seeds[i] + seeds[i + 1]))
-    print(seed_ranges)
 
-    transformed = []
-    for seed in seeds:
-        current_seed = seed
-        for conversion in conversions:
-            found = False
-            for source_begin, source_end in conversion.keys():
-                if (
-                    current_seed >= source_begin
-                    and current_seed <= source_end
-                    and found == False
-                ):
-                    found = True
-                    current_seed = (
-                        conversion[(source_begin, source_end)][0]
-                        + current_seed
-                        - source_begin
-                    )
-        transformed.append(current_seed)
-
-    transformed_ranges = []
-    for seed_range in seed_ranges:
-        seed_begin, seed_end = seed_range
+    for _ in seed_ranges:
         current_ranges = [i for i in seed_ranges]
         for conversion in conversions:
             new_ranges = []
-            for source_range, dest_range in conversion.items():
+            for source, dest in conversion.items():
                 new_unmapped_ranges = []
                 for current_range in current_ranges:
                     remaining_ranges, mapped_range = convert_intervals(
-                        *current_range, *source_range, dest_range[0]
+                        *current_range, *source, dest[0]
                     )
                     if mapped_range is not None:
                         new_ranges.append(mapped_range)
                     new_unmapped_ranges += remaining_ranges
                 current_ranges = new_unmapped_ranges
             current_ranges += new_ranges
+    return current_ranges
 
-    print(transformed)
-    print(min(transformed))
 
-    print(min([current_range[0] for current_range in current_ranges]))
+if __name__ == "__main__":
+    data = load_data(TESTING, "\n\n")
+    seeds, conversions = parse_input(data)
+
+    # PART 1
+    # test:          35
+    # answer: 309796150
+    print(min(apply_maps(seeds, conversions)))
+
+    # PART 1
+    # test:         46
+    # answer: 50716416
+    ranges = apply_maps_to_more_seeds(seeds, conversions)
+    print(min([range[0] for range in ranges]))
