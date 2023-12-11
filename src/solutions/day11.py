@@ -4,7 +4,7 @@ import itertools
 TESTING = True
 
 
-def expand_unverse(data):
+def expand_universe(data):
     exp_rows = [i for i in range(len(data)) if data[i].find("#") < 0]
     exp_cols = []
     for j in range(len(data[0])):
@@ -47,7 +47,7 @@ def get_result(coords, exp_factor):
 
 if __name__ == "__main__":
     data = load_data(TESTING, "\n")
-    exp_rows, exp_cols = expand_unverse(data)
+    exp_rows, exp_cols = expand_universe(data)
     coords = get_coords(data)
 
     # PART 1
