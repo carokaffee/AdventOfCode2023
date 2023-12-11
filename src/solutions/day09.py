@@ -20,7 +20,6 @@ def get_differences(line):
 if __name__ == "__main__":
     data = load_data(TESTING, "\n")
     numbers = parse_input(data)
-    print(numbers)
 
     res = 0
     for line in numbers:
@@ -32,19 +31,16 @@ if __name__ == "__main__":
             pyramid.append(next_line)
             if next_line.count(0) == len(next_line):
                 done = True
-            print(next_line)
-
-        print(pyramid)
+        new_pyramid = [[0]]
 
         for i, line in enumerate(pyramid[::-1]):
             if i == 0:
                 continue
-            print("reverse", line)
-            this_elem = pyramid[::-1][i][-1]
-            prev_elem = pyramid[::-1][i - 1][-1]
-            next_item = this_elem + prev_elem
-            pyramid[::-1][i].append(next_item)
+            this_elem = pyramid[::-1][i][0]
+            prev_elem = new_pyramid[i - 1][0]
+            next_item = this_elem - prev_elem
+            new_pyramid.append([next_item] + pyramid[::-1][i])
 
-        res += pyramid[0][-1]
+        res += new_pyramid[-1][0]
 
     print(res)
