@@ -1,46 +1,20 @@
 from src.tools.loader import load_data
 import itertools
 
-
-TESTING = False
-
-
-def expand_universe(data):
-    grid = []
-    for line in data:
-        grid.append(line)
-        if line.find("#") < 0:
-            grid.append(["." for _ in range(len(line))])
-
-    new_grid = ["" for _ in range(len(grid))]
-    for j in range(len(grid[0])):
-        has_hash = False
-        for i in range(len(grid)):
-            if grid[i][j] == "#":
-                has_hash = True
-        for i in range(len(grid)):
-            new_grid[i] += grid[i][j]
-        if not has_hash:
-            for i in range(len(grid)):
-                new_grid[i] += "."
-    return new_grid
+TESTING = True
 
 
-def expand_universe_more(data):
-    expanded_rows = []
-    expanded_cols = []
-    for i, line in enumerate(data):
-        if line.find("#") < 0:
-            expanded_rows.append(i)
-
+def expand_unverse(data):
+    exp_rows = [i for i in range(len(data)) if data[i].find("#") < 0]
+    exp_cols = []
     for j in range(len(data[0])):
         has_hash = False
         for i in range(len(data)):
             if data[i][j] == "#":
                 has_hash = True
         if not has_hash:
-            expanded_cols.append(j)
-    return expanded_rows, expanded_cols
+            exp_cols.append(j)
+    return exp_rows, exp_cols
 
 
 def get_coords(grid):
@@ -52,67 +26,36 @@ def get_coords(grid):
     return coords
 
 
+def get_distance(pair_1, pair_2):
+    x1, y1 = pair_1
+    x2, y2 = pair_2
+    start_x, end_x = min(x1, x2), max(x1, x2)
+    start_y, end_y = min(y1, y2), max(y1, y2)
+    x_dist = len(set(exp_rows).intersection(set(range(start_x, end_x))))
+    y_dist = len(set(exp_cols).intersection(set(range(start_y, end_y))))
+    return x_dist + y_dist
+
+
+def get_result(coords, exp_factor):
+    sum = 0
+    for (x1, y1), (x2, y2) in itertools.combinations(coords, 2):
+        distance = get_distance((x1, y1), (x2, y2))
+        sum += distance * (exp_factor - 1)
+        sum += abs(x2 - x1) + abs(y2 - y1)
+    return sum
+
+
 if __name__ == "__main__":
     data = load_data(TESTING, "\n")
-    print(data)
-    print()
-    new_grid = expand_universe(data)
-    for line in new_grid:
-        print(line)
-
-    coords = get_coords(new_grid)
-    print(coords)
-
-    print(list(itertools.combinations([1, 2, 3, 4, 5], 2)))
-
-    res = 0
-    for pair_1, pair_2 in itertools.combinations(coords, 2):
-        res += abs(pair_1[0] - pair_2[0]) + abs(pair_1[1] - pair_2[1])
-
-    print(res)
-
-    expanded_rows, expanded_cols = expand_universe_more(data)
-    print(expanded_rows, expanded_cols)
-
-    res_2 = 0
-
+    exp_rows, exp_cols = expand_unverse(data)
     coords = get_coords(data)
 
-    for pair_1, pair_2 in itertools.combinations(coords, 2):
-        if pair_1[0] > pair_2[0]:
-            exp_length_row = len(
-                list(
-                    set(expanded_rows).intersection(
-                        set(range(pair_2[0], pair_1[0] + 1))
-                    )
-                )
-            )
-        else:
-            exp_length_row = len(
-                list(
-                    set(expanded_rows).intersection(
-                        set(range(pair_1[0], pair_2[0] + 1))
-                    )
-                )
-            )
-        if pair_1[1] > pair_2[1]:
-            exp_length_col = len(
-                list(
-                    set(expanded_cols).intersection(
-                        set(range(pair_2[1], pair_1[1] + 1))
-                    )
-                )
-            )
-        else:
-            exp_length_col = len(
-                list(
-                    set(expanded_cols).intersection(
-                        set(range(pair_1[1], pair_2[1] + 1))
-                    )
-                )
-            )
-        res_2 += exp_length_row * (1000000 - 1)
-        res_2 += exp_length_col * (1000000 - 1)
-        res_2 += abs(pair_1[0] - pair_2[0]) + abs(pair_1[1] - pair_2[1])
+    # PART 1
+    # test:       374
+    # answer: 9805264
+    print(get_result(coords, 2))
 
-    print(res_2)
+    # PART 2
+    # test:      82000210
+    # answer:779032247216
+    print(get_result(coords, 1000000))
