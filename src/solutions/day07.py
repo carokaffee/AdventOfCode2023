@@ -55,6 +55,43 @@ def sort_hands(hands):
     return sorted_hands
 
 
+def sort_joker_hands(hands):
+    category_hands = sort_by_joker_category(hands)
+    sorted_hands = []
+    for category in CATEGORIES[::-1]:
+        sorted_hands += sort_by_highest_joker_card(category_hands[category])
+    return sorted_hands
+
+
+def sort_by_highest_joker_card(hands):
+    return sorted(hands, key=lambda x: x[1][0])
+
+
+def sort_by_joker_category(hands):
+    categorised_hands = {category: [] for category in CATEGORIES}
+    for hand in hands:
+        normal_hand, joker_hand = hand
+        cards, _ = normal_hand
+        assert 11 not in cards
+        counts = dict(Counter(cards))
+        vals = list(counts.values())
+        if 5 in vals:
+            categorised_hands["five"].append(hand)
+        elif 4 in vals:
+            categorised_hands["four"].append(hand)
+        elif 3 in vals and 2 in vals:
+            categorised_hands["fullhouse"].append(hand)
+        elif 3 in vals:
+            categorised_hands["three"].append(hand)
+        elif vals.count(2) == 2:
+            categorised_hands["twopairs"].append(hand)
+        elif 2 in vals:
+            categorised_hands["onepair"].append(hand)
+        else:
+            categorised_hands["high"].append(hand)
+    return categorised_hands
+
+
 def get_score(hands):
     res = 0
     for i, hand in enumerate(hands):
@@ -67,13 +104,10 @@ def find_max_val_for_J(hand):
     cards, bid = hand
     num_J = cards.count(11)
     if num_J == 0:
-        return cards + [0, 0, 0, 0, 0], bid
-    # elif num_J == 1:
-    #    cards = list([i if i != 11 else 1 for i in cards])
-    #    return cards + [0, 0, 0, 0, 0], bid
+        return (cards, bid), (cards, bid)
     else:
         possible_J = list(
-            itertools.combinations([i for i in range(2, 15) if i != 11], num_J)
+            itertools.product([i for i in range(2, 15) if i != 11], repeat=num_J)
         )
         all_possible_hands = []
         for J_tuple in possible_J:
@@ -83,14 +117,15 @@ def find_max_val_for_J(hand):
             for item in cards:
                 if item == 11:
                     new_hand.append(J_tuple[counter])
-                    new_hand_joker.append(-1)
+                    new_hand_joker.append(1)
                     counter += 1
                 else:
                     new_hand.append(item)
-                    new_hand_joker.append(0)
-            new_hand = (list(new_hand) + list(new_hand_joker), bid)
-            all_possible_hands.append(new_hand)
-        all_possible_hands = sort_hands(all_possible_hands)
+                    new_hand_joker.append(item)
+            new_hand = (list(new_hand), bid)
+            new_hand_joker = (list(new_hand_joker), bid)
+            all_possible_hands.append((new_hand, new_hand_joker))
+        all_possible_hands = sort_joker_hands(all_possible_hands)
         return all_possible_hands[-1]
 
 
@@ -99,13 +134,21 @@ if __name__ == "__main__":
     hands = parse_input(data)
     sorted_hands = sort_hands(hands)
 
+    # PART 1
+    # test:        6440
+    # answer: 249638405
     print(get_score(sorted_hands))
 
     new_best_hands = []
     for hand in hands:
         new_best_hands.append(find_max_val_for_J(hand))
 
-    new_best_hands = sort_hands(new_best_hands)
-    score = get_score(new_best_hands)
+    new_best_hands = sort_joker_hands(new_best_hands)
+    score = get_score([new_best_hand[0] for new_best_hand in new_best_hands])
 
+    # PART 2
+    # test:        5905
+    # answer: 249776650
     print(score)
+
+# TODO: Joker-funktionen entfernen und stattdessen beim sorten joker ersetzen
