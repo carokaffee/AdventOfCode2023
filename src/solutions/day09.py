@@ -10,37 +10,46 @@ def parse_input(data):
     return numbers
 
 
-def get_differences(line):
+def get_differences(row):
     differences = []
-    for i in range(len(line) - 1):
-        differences.append(line[i + 1] - line[i])
+    for i in range(len(row) - 1):
+        differences.append(row[i + 1] - row[i])
     return differences
+
+
+def extrapolate_pyramid(rows, backwards=False):
+    sum = 0
+    for row in rows:
+        if backwards:
+            row = list(reversed(row))
+        pyramid = [row]
+        done = False
+        while not done:
+            row = get_differences(row)
+            pyramid.append(row)
+            if row.count(0) == len(row):
+                done = True
+
+        for i in range(1, len(pyramid)):
+            new_number = (
+                list(reversed(pyramid))[i][-1] + list(reversed(pyramid))[i - 1][-1]
+            )
+            pyramid[len(pyramid) - i - 1].append(new_number)
+
+        sum += pyramid[0][-1]
+    return sum
 
 
 if __name__ == "__main__":
     data = load_data(TESTING, "\n")
-    numbers = parse_input(data)
+    rows = parse_input(data)
 
-    res = 0
-    for line in numbers:
-        pyramid = [line]
-        next_line = line
-        done = False
-        while not done:
-            next_line = get_differences(next_line)
-            pyramid.append(next_line)
-            if next_line.count(0) == len(next_line):
-                done = True
-        new_pyramid = [[0]]
+    # PART 1
+    # test:          114
+    # answer: 1972648895
+    print(extrapolate_pyramid(rows))
 
-        for i, line in enumerate(pyramid[::-1]):
-            if i == 0:
-                continue
-            this_elem = pyramid[::-1][i][0]
-            prev_elem = new_pyramid[i - 1][0]
-            next_item = this_elem - prev_elem
-            new_pyramid.append([next_item] + pyramid[::-1][i])
-
-        res += new_pyramid[-1][0]
-
-    print(res)
+    # PART 2
+    # test:     2
+    # answer: 919
+    print(extrapolate_pyramid(rows, backwards=True))
