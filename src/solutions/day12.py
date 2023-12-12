@@ -1,7 +1,7 @@
 from src.tools.loader import load_data
 import itertools
 
-TESTING = False
+TESTING = True
 
 
 def parse_input(data):
@@ -13,12 +13,23 @@ def parse_input(data):
     return springs, conditions
 
 
+def unfold_paper(springs, conditions):
+    longer_springs = []
+    longer_conditions = []
+    for i in range(len(springs)):
+        longer_springs.append((springs[i] + "?") * 4 + springs[i])
+        longer_conditions.append(conditions[i] * 5)
+    return longer_springs, longer_conditions
+
+
 if __name__ == "__main__":
     data = load_data(TESTING, "\n")
     springs, conditions = parse_input(data)
+    springs, conditions = unfold_paper(springs, conditions)
 
     res = 0
     for i in range(len(springs)):
+        print(i)
         num_springs = len(springs[i])
         num_broken = sum(conditions[i])
         num_conditions = len(conditions[i])
