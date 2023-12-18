@@ -9,98 +9,69 @@ def parse_input(data):
     return [list(map(int, line)) for line in data]
 
 
-def print_grid(grid):
-    for line in grid:
-        for el in line:
-            print(el, end="")
-        print()
+def initialise_graph(grid):
+    i_dim = len(grid)
+    j_dim = len(grid[0])
+    nodes = {
+        (i, j, dir): 2**100
+        for i in range(i_dim)
+        for j in range(j_dim)
+        for dir in DIRECTIONS
+    }
+    nodes[(0, 0, (1, 0))] = 0
+    nodes[(0, 0, (0, 1))] = 0
+    end_coords = [(i_dim - 1, j_dim - 1, dir) for dir in [(0, 1), (1, 0)]]
+    return nodes, end_coords
 
 
-def get_next_coordinate(unvisited):
-    next_coordinate = None
-    min_dist = 2**100
-    for coord in unvisited:
-        if nodes[coord] < min_dist:
-            next_coordinate = coord
-            min_dist = nodes[coord]
-    return next_coordinate
-
-
-def set_neighbours(coordinates, unvisited):
+def set_neighbours(grid, nodes, coords, queue, visited, step_sizes):
     for dir in DIRECTIONS:
-        if (dir == coordinates[2]) or (dir == (-coordinates[2][0], -coordinates[2][1])):
+        if (dir == coords[2]) or (dir == (-coords[2][0], -coords[2][1])):
             continue
-        for step in [4, 5, 6, 7, 8, 9, 10]:
+        for step in step_sizes:
             next_coord = (
-                coordinates[0] + dir[0] * step,
-                coordinates[1] + dir[1] * step,
+                coords[0] + dir[0] * step,
+                coords[1] + dir[1] * step,
                 dir,
             )
-            if next_coord in unvisited:
-                cost = nodes[coordinates] + sum(
+            if next_coord in nodes and next_coord not in visited:
+                queue.add(next_coord)
+                cost = nodes[coords] + sum(
                     [
-                        grid[coordinates[0] + dir[0] * i][coordinates[1] + dir[1] * i]
+                        grid[coords[0] + dir[0] * i][coords[1] + dir[1] * i]
                         for i in range(1, step + 1)
                     ]
                 )
                 if nodes[next_coord] > cost:
                     nodes[next_coord] = cost
+    return queue
 
 
-def set_neighbours2(coordinates, unvisited):
-    for dir in DIRECTIONS:
-        if coordinates[2] == dir:
-            if coordinates[3] == 3:
-                continue
-            else:
-                next_coord = (
-                    coordinates[0] + dir[0],
-                    coordinates[1] + dir[1],
-                    dir,
-                    coordinates[3] + 1,
-                )
-        else:
-            next_coord = (coordinates[0] + dir[0], coordinates[1] + dir[1], dir, 1)
-        if next_coord in unvisited:
-            if (
-                nodes[next_coord]
-                > nodes[coordinates] + grid[next_coord[0]][next_coord[1]]
-            ):
-                nodes[next_coord] = (
-                    nodes[coordinates] + grid[next_coord[0]][next_coord[1]]
-                )
+def do_dijkstra(nodes, end_coords, step_sizes):
+    queue = set([(0, 0, (1, 0)), (0, 0, (0, 1))])
+    visited = set()
+    while len(set(end_coords).intersection(visited)) < 1:
+        current_coordinate = min(queue, key=lambda x: nodes[x])
+        queue.remove(current_coordinate)
+        visited.add(current_coordinate)
+        queue = set_neighbours(
+            grid, nodes, current_coordinate, queue, visited, step_sizes
+        )
+    return min([nodes[end_coord] for end_coord in end_coords])
 
 
 if __name__ == "__main__":
     data = load_data(TESTING, "\n")
     grid = parse_input(data)
-    print_grid(grid)
 
-    grid_i_dim = len(grid)
-    grid_j_dim = len(grid[0])
+    # PART 1
+    # test:   102
+    # answer: 953
+    nodes, end_coords = initialise_graph(grid)
+    print(do_dijkstra(nodes, end_coords, range(1, 4)))
 
-    nodes = {
-        (i, j, dir): 2**100
-        for i in range(grid_i_dim)
-        for j in range(grid_j_dim)
-        for dir in DIRECTIONS
-    }
-
-    nodes[(0, 0, (1, 0))] = 0
-    nodes[(0, 0, (0, 1))] = 0
-
-    unvisited = set(nodes.keys())
-    print(grid_i_dim, grid_j_dim, len(unvisited))
-
-    visited = set()
-    end_coordinates = [
-        (grid_i_dim - 1, grid_j_dim - 1, dir) for dir in [(0, 1), (1, 0)]
-    ]
-    while len(set(end_coordinates).intersection(visited)) < 1:
-        current_coordinate = get_next_coordinate(unvisited)
-        unvisited.remove(current_coordinate)
-        visited.add(current_coordinate)
-        set_neighbours(current_coordinate, unvisited)
-
-    for end_coordinate in end_coordinates:
-        print("done", end_coordinate, nodes[end_coordinate])
+    # PART 2
+    # test:     94
+    # answer: 1180
+    nodes, end_coords = initialise_graph(grid)
+    print(do_dijkstra(nodes, end_coords, range(4, 11)))
