@@ -1,6 +1,6 @@
 from src.tools.loader import load_data
 
-TESTING = True
+TESTING = False
 
 DIRECTIONS = {"R": (0, 1), "L": (0, -1), "D": (1, 0), "U": (-1, 0)}
 MAPPING = {0: "R", 1: "D", 2: "L", 3: "U"}
@@ -67,6 +67,8 @@ if __name__ == "__main__":
             else:
                 grid[-1].append(".")
 
+    print_grid(grid, max_i, max_j, min_i, min_j)
+
     for i in range(len(grid)):
         for j in range(len(grid[0])):
             if grid[i][j] == "S":
@@ -96,12 +98,58 @@ if __name__ == "__main__":
 
     print(instructions_2)
 
-    current = (0, 0)
-    outline = [(0, 0)]
+    # current = (0, 0, True)
+    outline = []
 
-    for dir, num in instructions_2:
+    # instructions_2 = instructions
+
+    for i in range(len(instructions_2)):
+        dir, num = instructions_2[i]
+        dir2, num_2 = instructions_2[i - 1]
+        convex = (MAPPING_2[dir2] % 4) == ((MAPPING_2[dir] - 1) % 4)
         current = (
             current[0] + DIRECTIONS[dir][0] * num,
             current[1] + DIRECTIONS[dir][1] * num,
         )
-        outline.append(current)
+        outline.append((*current, convex))
+
+    print("outline", len(outline), outline)
+    print("inst_2", len(instructions_2))
+
+    shifted_outline = []
+
+    for i in range(len(outline)):
+        x, y, convex = outline[i]
+        prev_dir = DIRECTIONS[instructions_2[i - 1][0]]
+        next_dir = DIRECTIONS[instructions_2[i][0]]
+        if convex:
+            shifted_outline.append(
+                (
+                    x + 0.5 * prev_dir[0] - 0.5 * next_dir[0],
+                    y + 0.5 * prev_dir[1] - 0.5 * next_dir[1],
+                )
+            )
+        else:
+            shifted_outline.append(
+                (
+                    x - 0.5 * prev_dir[0] + 0.5 * next_dir[0],
+                    y - 0.5 * prev_dir[1] + 0.5 * next_dir[1],
+                )
+            )
+    print(shifted_outline)
+
+    res_2 = 0
+
+    for i in range(len(outline)):
+        x, y, _ = outline[i - 1]
+        x2, y2, convex = outline[i]
+        res_2 += 0.5 * (y + y2) * (x2 - x)
+        if convex:
+            res_2 += 0.75
+        else:
+            res_2 += 0.25
+        res_2 += 0.5 * (instructions_2[i][1] - 1)
+
+    print(res_2)
+
+# 952408144115
