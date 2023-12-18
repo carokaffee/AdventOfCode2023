@@ -9,7 +9,7 @@ My solutions for AoC 2023 written in Python.
 | 01 | [Trebuchet?!](https://adventofcode.com/2023/day/1) | [day01.py](src/solutions/day01.py) || 14 | [Parabolic Reflector Dish](https://adventofcode.com/2023/day/14) | [day14.py](src/solutions/day14.py) |
 | 02 | [Cube Conundrum](https://adventofcode.com/2023/day/2) | [day02.py](src/solutions/day02.py) || 15 | [Lens Library](https://adventofcode.com/2023/day/15) | [day15.py](src/solutions/day15.py) |
 | 03 | [Gear Ratios](https://adventofcode.com/2023/day/3) | [day03.py](src/solutions/day03.py) || 16 | [The Floor Will Be Lava](https://adventofcode.com/2023/day/16) | [](src/solutions/day16.py) |
-| 04 | [Scratchcards](https://adventofcode.com/2023/day/4) | [day04.py](src/solutions/day04.py) || 17 | [Clumsy Crucible](https://adventofcode.com/2023/day/17) | [](src/solutions/day17.py) |
+| 04 | [Scratchcards](https://adventofcode.com/2023/day/4) | [day04.py](src/solutions/day04.py) || 17 | [Clumsy Crucible](https://adventofcode.com/2023/day/17) | [day17.py](src/solutions/day17.py) |
 | 05 | [If You Give A Seed A Fertilizer](https://adventofcode.com/2023/day/5) | [day05.py](src/solutions/day05.py) || 18 | [Lavaduct Lagoon](https://adventofcode.com/2023/day/18) | [day18.py](src/solutions/day18.py) |
 | 06 | [Wait For It](https://adventofcode.com/2023/day/6) | [day06.py](src/solutions/day06.py) || 19 | [](https://adventofcode.com/2023/day/19) | [](src/solutions/day19.py) |
 | 07 | [Camel Cards](https://adventofcode.com/2023/day/7) | [](src/solutions/day07.py) || 20 | [](https://adventofcode.com/2023/day/20) | [](src/solutions/day20.py) | 
