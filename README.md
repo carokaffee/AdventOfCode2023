@@ -12,7 +12,7 @@ My solutions for AoC 2023 written in Python.
 | 04 | [Scratchcards](https://adventofcode.com/2023/day/4) | [day04.py](src/solutions/day04.py) || 17 | [Clumsy Crucible](https://adventofcode.com/2023/day/17) | [day17.py](src/solutions/day17.py) |
 | 05 | [If You Give A Seed A Fertilizer](https://adventofcode.com/2023/day/5) | [day05.py](src/solutions/day05.py) || 18 | [Lavaduct Lagoon](https://adventofcode.com/2023/day/18) | [day18.py](src/solutions/day18.py) |
 | 06 | [Wait For It](https://adventofcode.com/2023/day/6) | [day06.py](src/solutions/day06.py) || 19 | [Aplenty](https://adventofcode.com/2023/day/19) | [day19.py](src/solutions/day19.py) |
-| 07 | [Camel Cards](https://adventofcode.com/2023/day/7) | [day20.py](src/solutions/day07.py) || 20 | [Pulse Propagation](https://adventofcode.com/2023/day/20) | [](src/solutions/day20.py) | 
+| 07 | [Camel Cards](https://adventofcode.com/2023/day/7) | [](src/solutions/day07.py) || 20 | [Pulse Propagation](https://adventofcode.com/2023/day/20) | [day20.py](src/solutions/day20.py) | 
 | 08 | [Haunted Wasteland](https://adventofcode.com/2023/day/8) | [day08.py](src/solutions/day08.py) || 21 | [Step Counter](https://adventofcode.com/2023/day/21) | [](src/solutions/day21.py) |
 | 09 | [Mirage Maintenance](https://adventofcode.com/2023/day/9) | [day09.py](src/solutions/day09.py) || 22 | [Sand Slabs](https://adventofcode.com/2023/day/22) | [day22.py](src/solutions/day22.py) |
 | 10 | [Pipe Maze](https://adventofcode.com/2023/day/10) | [day10.py](src/solutions/day10.py) || 23 | [A Long Walk](https://adventofcode.com/2023/day/23) | [](src/solutions/day23.py) |
